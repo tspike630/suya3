@@ -110,14 +110,19 @@ public static class Jyx2ResourceHelper
                 throw new Exception("CurrentModConfig 为空");
             Debug.Log("自动更新Lua配置表");
             var ModRootDir = RuntimeEnvSetup.CurrentModConfig.ModRootDir;
-            try
+            string luaDir = $"{ModRootDir}/Configs/Lua";
+            bool hasLua = Directory.Exists(luaDir) && Directory.GetFiles(luaDir, "*.lua").Length > 0;
+            if (!hasLua)
             {
-                ExcelToLua.ExportAllLuaFile($"{ModRootDir}/Configs", $"{ModRootDir}/Configs/Lua");
-                UnityEditor.AssetDatabase.Refresh();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex);
+                try
+                {
+                    ExcelToLua.ExportAllLuaFile($"{ModRootDir}/Configs", luaDir);
+                    UnityEditor.AssetDatabase.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError(ex);
+                }
             }
         }
 #endif
