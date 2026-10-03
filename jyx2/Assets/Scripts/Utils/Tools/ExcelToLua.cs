@@ -326,16 +326,12 @@ namespace Jyx2.Middleware
                         {
                             sb.Append(string.IsNullOrEmpty(v) ? "nil" : v);
                         }
-                        if (i < vList.Length - 1)
-                        {
-                            sb.Append(',');
-                        }
-                    }
-                    if (vList.Length > 1)
+                    if (i < vList.Length - 1)
                     {
-                        sb.Insert(0, '{');
-                        sb.Append("}");
+                        sb.Append(',');
                     }
+                    }
+                    sb.Append('}');
                     return sb.ToString();
             }
         }
