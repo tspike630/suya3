@@ -161,9 +161,9 @@ namespace MOD.UI
         
         void OnLanuch()
         {
+            var mod = GetCurrentSelectMod();
             Jyx2_UIManager.Instance.CloseAllUI();
             RuntimeEnvSetup.ForceClear();
-            var mod = GetCurrentSelectMod();
             if (mod != null)
             {
                 RuntimeEnvSetup.SetCurrentMod(mod);
@@ -208,7 +208,16 @@ namespace MOD.UI
 
             if (m_ModListView.GetItemsCount() > 0)
             {
-                m_ModListView.SelectedIndex = 0;    
+                int select = 0;
+                for (int i = 0; i < _allMods.Count; i++)
+                {
+                    if (string.Equals(_allMods[i].Id, "SAMPLE", StringComparison.OrdinalIgnoreCase))
+                    {
+                        select = i;
+                        break;
+                    }
+                }
+                m_ModListView.SelectedIndex = select;
             }
             
             m_ModListView.UpdateItems();
