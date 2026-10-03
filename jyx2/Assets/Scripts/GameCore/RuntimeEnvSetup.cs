@@ -23,12 +23,15 @@ namespace Jyx2
         private static bool _isSetup;
         public static MODRootConfig CurrentModConfig { get; private set; } = null;
         private static GameModBase _currentMod;
+        private static string _selectedModId;
 
         public static string CurrentModId => _currentMod?.Id;
 
         public static void SetCurrentMod(GameModBase mod)
         {
             _currentMod = mod;
+            if (!string.IsNullOrEmpty(mod?.Id))
+                _selectedModId = mod.Id;
         }
 
         public static GameModBase GetCurrentMod() => _currentMod;
@@ -107,6 +110,8 @@ namespace Jyx2
 #endif
                 await ResLoader.Init();
                 if (_currentMod == null)
+                    await RestoreSelectedMod();
+                if (_currentMod == null)
                     throw new Exception("没有选中模组");
                 await ResLoader.LaunchMod(_currentMod);
 
@@ -138,6 +143,29 @@ namespace Jyx2
                 MessageBox.ShowMessage(msg);
                 return false;
             }
+        }
+
+        static async UniTask RestoreSelectedMod()
+        {
+#if UNITY_EDITOR
+            var mods = await new GameModEditorLoader().LoadMods();
+            GameModBase fallback = null;
+            foreach (var mod in mods)
+            {
+                if (fallback == null && string.Equals(mod.Id, "SAMPLE", StringComparison.OrdinalIgnoreCase))
+                    fallback = mod;
+                if (!string.IsNullOrEmpty(_selectedModId) &&
+                    string.Equals(mod.Id, _selectedModId, StringComparison.OrdinalIgnoreCase))
+                {
+                    _currentMod = mod;
+                    return;
+                }
+            }
+
+            _currentMod = fallback;
+#else
+            await UniTask.CompletedTask;
+#endif
         }
     }
 }
