@@ -131,7 +131,7 @@ namespace Jyx2
                 return;
             }
 
-            if (RuntimeEnvSetup.CurrentModConfig.PreloadedLua != null)
+            if (RuntimeEnvSetup.CurrentModConfig.PreloadedLua != null && _luaMapper != null)
             {
                 UniTask.Void(async () =>
                 {

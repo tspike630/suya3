@@ -106,9 +106,13 @@ namespace Jyx2
                 }
 #endif
                 await ResLoader.Init();
+                if (_currentMod == null)
+                    throw new Exception("没有选中模组");
                 await ResLoader.LaunchMod(_currentMod);
 
                 CurrentModConfig = await ResLoader.LoadAsset<MODRootConfig>("Assets/ModSetting.asset");
+                if (CurrentModConfig == null)
+                    throw new Exception("找不到 ModSetting，模组=" + _currentMod.Id);
                 GameSettingManager.Init();
                 await Jyx2ResourceHelper.Init();
                 LuaManager.LuaMod_Init();
@@ -119,7 +123,13 @@ namespace Jyx2
             }
             catch (Exception e)
             {
-                string msg = "<color=red>MOD加载出错了：" + e.Message + "</color>";
+                string where = "";
+                if (!string.IsNullOrEmpty(e.StackTrace))
+                {
+                    int nl = e.StackTrace.IndexOf('\n');
+                    where = (nl > 0 ? e.StackTrace.Substring(0, nl) : e.StackTrace).Trim();
+                }
+                string msg = "<color=red>" + e.Message + "\n" + where + "</color>";
                 Debug.LogError(msg);
                 Debug.LogError(e.ToString());
                 ScreenLogger.Instance.enabled = true;

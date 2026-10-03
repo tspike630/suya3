@@ -67,6 +67,8 @@ public static class Jyx2ResourceHelper
         await LuaManager.InitLuaMapper();
         
         //执行lua根文件
+        if (GlobalAssetConfig.Instance == null || GlobalAssetConfig.Instance.rootLuaFile == null)
+            throw new Exception("GlobalAssetConfig 或 Lua引导文件为空");
         LuaManager.Init(GlobalAssetConfig.Instance.rootLuaFile.text);
 
         //初始化LuaScripts
@@ -102,8 +104,10 @@ public static class Jyx2ResourceHelper
 
         //编辑器模式下自动生成lua配置表
 #if UNITY_EDITOR
-        if (mod is GameModEditor editor)
+        if (mod is GameModEditor)
         {
+            if (RuntimeEnvSetup.CurrentModConfig == null)
+                throw new Exception("CurrentModConfig 为空");
             Debug.Log("自动更新Lua配置表");
             var ModRootDir = RuntimeEnvSetup.CurrentModConfig.ModRootDir;
             try
