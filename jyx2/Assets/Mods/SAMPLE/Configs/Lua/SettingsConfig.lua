@@ -36,7 +36,7 @@ local data = {
 {19,[[MAX_WUGONG_LEVEL]],[[10]]},
 {20,[[MONEY_ID]],[[174]]},
 {21,[[MAX_TEAMCOUNT]],[[100]]},
-{22,[[MAX_SKILL_COUNT]],[[10]]},
+{22,[[MAX_SKILL_COUNT]],[[40]]},
 {23,[[MAX_ROLE_ATTRIBUTE]],[[100]]},
 {24,[[MAX_BATTLE_TEAMMATE_COUNT]],[[100]]},
 {25,[[WORLD_MAP_ID]],[[1000]]},
